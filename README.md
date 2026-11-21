@@ -52,9 +52,10 @@ Si no tienes Git instalado, puedes instalar **GitHub Desktop** e iniciar sesión
 ## 4. Publicar la web con GitHub Pages
 
 1. `.env.example` contiene la URL del proyecto y la clave pública `publishable` o `anon`; son valores de cliente que se incluyen en el JavaScript publicado. No pongas la contraseña de la base de datos ni la clave `service_role` ahí.
-2. El workflow `.github/workflows/deploy.yml` copia esa configuración durante la compilación, habilita GitHub Pages y publica la app en cada push a `main`.
-3. Cuando termine la acción, copia la URL que aparece en **Settings → Pages** y agrégala a **Supabase → Authentication → URL Configuration → Site URL** y **Redirect URLs**.
-4. Si el despliegue falla, revisa que la rama principal se llame `main` y que GitHub Actions tenga permiso para publicar Pages.
+2. En GitHub, abre **Settings → Pages** y selecciona **GitHub Actions** como fuente en **Build and deployment**. Este paso se hace una sola vez; el token del workflow no puede crear el sitio por sí solo.
+3. El workflow `.github/workflows/deploy.yml` copia la configuración pública durante la compilación y publica la app en cada push a `main`.
+4. Si ya hubo un intento fallido antes de activar Pages, vuelve a ejecutarlo en **Actions → Deploy to GitHub Pages → Re-run jobs** o haz un nuevo push.
+5. Cuando termine la acción, copia la URL que aparece en **Settings → Pages** y agrégala a **Supabase → Authentication → URL Configuration → Site URL** y **Redirect URLs**.
 
 ## Lógica de datos
 
