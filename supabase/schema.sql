@@ -1,7 +1,8 @@
--- Ejecuta este archivo una sola vez en Supabase > SQL Editor.
+-- Ejecuta este archivo en Supabase > SQL Editor. Es repetible para tablas
+-- compatibles ya existentes: las omite y reemplaza las políticas del esquema.
 create extension if not exists pgcrypto;
 
-create table public.clients (
+create table if not exists public.clients (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   name text not null check (length(trim(name)) between 1 and 100),
@@ -10,7 +11,7 @@ create table public.clients (
   created_at timestamptz not null default now()
 );
 
-create table public.products (
+create table if not exists public.products (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   name text not null check (length(trim(name)) between 1 and 100),
@@ -20,7 +21,7 @@ create table public.products (
   updated_at timestamptz not null default now()
 );
 
-create table public.orders (
+create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   client_id uuid not null references public.clients(id) on delete restrict,
@@ -32,7 +33,7 @@ create table public.orders (
   delivered_at timestamptz
 );
 
-create table public.order_items (
+create table if not exists public.order_items (
   id uuid primary key default gen_random_uuid(),
   order_id uuid not null references public.orders(id) on delete cascade,
   product_id uuid not null references public.products(id) on delete restrict,
@@ -42,7 +43,7 @@ create table public.order_items (
   line_total numeric(12, 2) generated always as (quantity * unit_price) stored
 );
 
-create table public.payments (
+create table if not exists public.payments (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   client_id uuid not null references public.clients(id) on delete restrict,
@@ -51,12 +52,12 @@ create table public.payments (
   created_at timestamptz not null default now()
 );
 
-create index clients_user_created_idx on public.clients(user_id, created_at desc);
-create index products_user_name_idx on public.products(user_id, name) where active;
-create index orders_user_date_idx on public.orders(user_id, order_date desc);
-create index orders_client_idx on public.orders(client_id);
-create index order_items_order_idx on public.order_items(order_id);
-create index payments_client_idx on public.payments(client_id, created_at desc);
+create index if not exists clients_user_created_idx on public.clients(user_id, created_at desc);
+create index if not exists products_user_name_idx on public.products(user_id, name) where active;
+create index if not exists orders_user_date_idx on public.orders(user_id, order_date desc);
+create index if not exists orders_client_idx on public.orders(client_id);
+create index if not exists order_items_order_idx on public.order_items(order_id);
+create index if not exists payments_client_idx on public.payments(client_id, created_at desc);
 
 alter table public.clients enable row level security;
 alter table public.products enable row level security;
@@ -64,20 +65,24 @@ alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
 alter table public.payments enable row level security;
 
+drop policy if exists "Users manage their own clients" on public.clients;
 create policy "Users manage their own clients"
   on public.clients for all to authenticated
   using (user_id = (select auth.uid()))
   with check (user_id = (select auth.uid()));
 
+drop policy if exists "Users manage their own products" on public.products;
 create policy "Users manage their own products"
   on public.products for all to authenticated
   using (user_id = (select auth.uid()))
   with check (user_id = (select auth.uid()));
 
+drop policy if exists "Users read their own orders" on public.orders;
 create policy "Users read their own orders"
   on public.orders for select to authenticated
   using (user_id = (select auth.uid()));
 
+drop policy if exists "Users read their own order items" on public.order_items;
 create policy "Users read their own order items"
   on public.order_items for select to authenticated
   using (exists (
@@ -85,6 +90,7 @@ create policy "Users read their own order items"
     where o.id = order_items.order_id and o.user_id = (select auth.uid())
   ));
 
+drop policy if exists "Users read their own payments" on public.payments;
 create policy "Users read their own payments"
   on public.payments for select to authenticated
   using (user_id = (select auth.uid()));
