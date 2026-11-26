@@ -447,6 +447,16 @@ function AuthScreen({ mode, onModeChange, onSubmit, error, message, busy, config
 
 function Dashboard({ orders, pending, outstanding, sales, orderCount, onNavigate, onDeliver, clients }) {
   const recentOrders = orders.slice(0, 4);
+  const monthPrefix = dateOnly().slice(0, 7);
+  const monthOrders = orders.filter((order) => order.order_date?.startsWith(monthPrefix));
+  const monthDelivered = monthOrders.filter((order) => order.delivered_at).length;
+  const monthPending = monthOrders.length - monthDelivered;
+  const monthSales = monthOrders.reduce((sum, order) => sum + Number(order.total), 0);
+  const monthProgress = monthOrders.length ? Math.round((monthDelivered / monthOrders.length) * 100) : 0;
+  const monthName = new Intl.DateTimeFormat("es", { month: "long", year: "numeric" }).format(new Date());
+  const progressStyle = monthOrders.length
+    ? { "--progress": `${monthProgress * 3.6}deg` }
+    : { "--progress": "0deg" };
   return (
     <>
       <section className="welcome-hero">
@@ -468,6 +478,24 @@ function Dashboard({ orders, pending, outstanding, sales, orderCount, onNavigate
         <StatCard icon={Truck} label="Por entregar" value={pending} note="Pedidos pendientes" tone="blue" />
         <StatCard icon={BadgeDollarSign} label="Por cobrar" value={money(outstanding)} note="Saldo de tus clientes" tone="orange" />
         <StatCard icon={RotateCcw} label="Ventas de hoy" value={money(sales)} note={`${orderCount} pedido${orderCount === 1 ? "" : "s"} registrado${orderCount === 1 ? "" : "s"}`} tone="green" />
+      </section>
+      <section className="monthly-progress surface-card">
+        <div className="monthly-progress-copy">
+          <div className="section-title-row">
+            <div><span className="section-eyebrow">AVANCE MENSUAL</span><h2>{monthName.charAt(0).toUpperCase() + monthName.slice(1)}</h2></div>
+          </div>
+          <div className="monthly-metrics">
+            <div><strong>{monthOrders.length}</strong><span>Pedidos</span></div>
+            <div><strong>{money(monthSales)}</strong><span>Ventas</span></div>
+          </div>
+        </div>
+        <div className="monthly-chart" role="img" aria-label={`${monthProgress}% de los pedidos del mes entregados`}>
+          <div className="progress-ring" style={progressStyle}><div><strong>{monthProgress}%</strong><span>completado</span></div></div>
+        </div>
+        <div className="monthly-legend">
+          <div><span className="legend-dot legend-delivered" /><div><strong>{monthDelivered}</strong><small>Entregados</small></div></div>
+          <div><span className="legend-dot legend-pending" /><div><strong>{monthPending}</strong><small>Por entregar</small></div></div>
+        </div>
       </section>
       <section className="quick-actions">
         <div className="section-title-row"><div><span className="section-eyebrow">ACCESOS DIRECTOS</span><h2>¿Qué necesitas hacer?</h2></div></div>
