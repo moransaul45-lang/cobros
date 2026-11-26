@@ -1,4 +1,4 @@
-# Punto de Pedido
+# Equipo Verapaces
 
 Aplicación React + Vite para clientes, catálogo, pedidos, entregas, cobros y reportes diarios. La autenticación y los datos usan Supabase; cada usuario solo puede consultar y modificar sus propios registros mediante Row Level Security (RLS).
 
@@ -11,7 +11,7 @@ Aplicación React + Vite para clientes, catálogo, pedidos, entregas, cobros y r
 
 1. Crea una cuenta e inicia sesión en [Supabase](https://supabase.com/).
 2. Presiona **New project**, escribe un nombre y una contraseña para la base de datos, y elige una región cercana.
-3. Espera a que termine de crearse el proyecto. En **SQL Editor**, crea una consulta nueva, pega todo el contenido de `supabase/schema.sql` y presiona **Run** una sola vez. Esto crea tablas, índices, funciones y políticas de seguridad.
+3. Espera a que termine de crearse el proyecto. En **SQL Editor**, crea una consulta nueva, pega todo el contenido de `supabase/schema.sql` y presiona **Run**. Esto crea tablas, índices, funciones y políticas de seguridad. El archivo omite tablas e índices existentes y reemplaza sus propias políticas, por lo que puede completar una ejecución parcial si las tablas existentes tienen las columnas compatibles; no borres tablas para corregir un error de duplicado.
 4. En **Project Settings → API**, copia la **Project URL** y la clave pública **Publishable key** (en proyectos antiguos puede aparecer como `anon`).
 5. No pongas la contraseña de la base de datos ni la clave `service_role` en el frontend, `.env.local` o GitHub.
 6. En **Authentication → URL Configuration**, agrega la dirección de tu aplicación a **Site URL** y **Redirect URLs**. Para GitHub Pages usa `https://TU_USUARIO.github.io/TU_REPOSITORIO/`.

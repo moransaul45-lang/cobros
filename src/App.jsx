@@ -308,7 +308,7 @@ function App() {
       <aside className={`sidebar ${mobileMenuOpen ? "sidebar-open" : ""}`}>
         <a className="brand" href="#" onClick={(event) => { event.preventDefault(); changePage("inicio"); }}>
           <span className="brand-icon"><ShoppingBasket size={19} /></span>
-          <span>Punto<span className="brand-light"> de Pedido</span></span>
+          <span className="brand-light">Equipo Verapaces</span>
         </a>
         <div className="sidebar-label">MENÚ PRINCIPAL</div>
         <nav className="side-nav" aria-label="Navegación principal">
@@ -328,7 +328,7 @@ function App() {
         <header className="mobile-header">
           <button className="icon-button mobile-menu-button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Abrir menú"><Menu size={21} /></button>
           <span className="brand-icon"><ShoppingBasket size={18} /></span>
-          <strong>Punto de Pedido</strong>
+          <strong>Equipo Verapaces</strong>
           <button className="icon-button mobile-logout" onClick={signOut} aria-label="Cerrar sesión"><LogOut size={18} /></button>
         </header>
         <div className="main-content">
@@ -397,13 +397,13 @@ function App() {
 
 function IntroSplash() {
   return (
-    <div className="intro-splash" role="status" aria-label="Bienvenido a Punto de Pedido">
+    <div className="intro-splash" role="status" aria-label="Bienvenido a Equipo Verapaces">
       <img className="intro-backdrop" src={productImage} alt="" />
       <div className="intro-shade" />
       <img className="intro-product" src={productImage} alt="Max Poder Total 5 en 1" />
       <div className="intro-copy">
         <span className="intro-brand-icon"><ShoppingBasket size={19} /></span>
-        <span><strong>Punto de Pedido</strong><small>Todo tu negocio, en orden</small></span>
+        <span><strong>Equipo Verapaces</strong><small>Todo tu negocio, en orden</small></span>
       </div>
     </div>
   );
@@ -414,7 +414,7 @@ function AuthScreen({ mode, onModeChange, onSubmit, error, message, busy, config
   const isRegister = mode === "register";
   return (
     <main className="auth-page" style={style}>
-      <div className="auth-brand"><span className="brand-icon"><ShoppingBasket size={20} /></span><span>Punto<span className="brand-light"> de Pedido</span></span></div>
+      <div className="auth-brand"><span className="brand-icon"><ShoppingBasket size={20} /></span><span className="brand-light">Equipo Verapaces</span></div>
       <div className="auth-layout">
         <section className="auth-story">
           <span className="auth-kicker"><Sparkles size={14} /> CONTROL DE TU NEGOCIO, EN UN SOLO LUGAR</span>
@@ -440,7 +440,7 @@ function AuthScreen({ mode, onModeChange, onSubmit, error, message, busy, config
           <div className="auth-security"><CheckCircle2 size={15} /> Inicio de sesión protegido por Supabase Auth</div>
         </section>
       </div>
-      <footer className="auth-footer">Punto de Pedido <span>·</span> Control simple para crecer con orden</footer>
+      <footer className="auth-footer">Equipo Verapaces <span>·</span> Control simple para crecer con orden</footer>
     </main>
   );
 }
